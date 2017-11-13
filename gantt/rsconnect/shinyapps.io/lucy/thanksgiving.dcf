@@ -5,8 +5,8 @@ account: lucy
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 234717
-bundleId: 1072063
+bundleId: 1072077
 url: https://lucy.shinyapps.io/thanksgiving/
-when: 1510541277.22295
+when: 1510542909.11793
 asMultiple: FALSE
 asStatic: FALSE

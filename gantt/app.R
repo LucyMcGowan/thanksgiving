@@ -9,7 +9,7 @@ body <- dashboardBody(
   fluidRow(
     infoBox("Number of guests", 
             17, icon = icon("users"), color = "purple"),
-    valueBox("2:30PM", "Eating time!", icon = icon("cutlery"), color = "orange"),
+    valueBox("2:30PM", "Eating time!", icon = icon("cutlery"), color = "yellow"),
     infoBox("Allergies", 
             "all nuts (especially peanuts), gluten", icon = icon("ban"), color = "purple")
   ),
@@ -31,9 +31,9 @@ body <- dashboardBody(
         br(),
         actionButton("run", "Click to re-run the chart")
     )
-  )
+  ),
+  HTML("Interested in how I coded this up (looking at you Arel!)? Check out the <a href = 'https://github.com/LucyMcGowan/thanksgiving/blob/master/gantt/app.R'> source code</a>!")
 )
-
 header = dashboardHeader(title = "Thanksgiving!")
 ui <- dashboardPage(
   title = "D'Agostino-McGowan Thanksgiving!",
@@ -48,15 +48,15 @@ server <- function(input, output) {
     input$run
     dat <- gs_url("https://docs.google.com/spreadsheets/d/1-Ttr5MBqHvLgakC6ihhprx_nsNRhl5ED_kunbYjdyHE/edit?usp=sharing",
                   lookup = FALSE,
-                  visibility = "public") %>%
-      gs_read()
+                  visibility = "public",
+                  verbose = FALSE) %>%
+      gs_read(verbose = FALSE)
     
     dat$start <- lubridate::as_datetime(dat$start, tz = "America/Chicago")
     dat$finish <- lubridate::as_datetime(dat$finish, tz = "America/Chicago")
     dat$duration <- dat$finish - dat$start
-    dat$duration
     
-    cols      <- RColorBrewer::brewer.pal(length(unique(dat$where)), name = "Set3")
+    cols <- RColorBrewer::brewer.pal(length(unique(dat$where)), name = "Set3")
     dat$color  <- factor(dat$where, labels = cols)
     dat <- dat[order(dat$start, decreasing = TRUE), ]
     
@@ -64,7 +64,7 @@ server <- function(input, output) {
     for(i in 1:(nrow(dat))){
       p <- add_trace(p,
                      type = "scatter",
-                     x = c(dat$start[i], dat$start[i] + dat$duration[i]), 
+                     x = c(dat$start[i], dat$finish[i]), 
                      y = c(i, i), 
                      mode = "lines",
                      line = list(color = dat$color[i], width = 20),
@@ -77,12 +77,9 @@ server <- function(input, output) {
     }
     
     p <- layout(p,
-                
                 xaxis = list(showgrid = F, tickfont = list(color = "#e6e6e6")),
-                
                 yaxis = list(showgrid = F, tickfont = list(color = "#e6e6e6"),
                              tickmode = "array", tickvals = 1:nrow(dat), ticktext = unique(dat$dish)),
-                
                 annotations = 
                   list(xref = "paper", yref = "paper",
                        x = 0.1, y = 1, xanchor = "left",
@@ -90,7 +87,6 @@ server <- function(input, output) {
                        font = list(color = "#f2f2f2", size = 20),
                        ax = 0, ay = 0,
                        align = "left"),
-                
                 plot_bgcolor = "#333333",  
                 paper_bgcolor = "#333333",
                 margin = list(l = 200, r = 50, b = 50, t = 50, pad = 4))  
