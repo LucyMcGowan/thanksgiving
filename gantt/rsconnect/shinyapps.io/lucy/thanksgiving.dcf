@@ -1,0 +1,12 @@
+name: thanksgiving
+title: thanksgiving
+username:
+account: lucy
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 234717
+bundleId: 1072063
+url: https://lucy.shinyapps.io/thanksgiving/
+when: 1510541277.22295
+asMultiple: FALSE
+asStatic: FALSE
